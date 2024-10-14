@@ -17,6 +17,14 @@ RUN apt-get update && \
 # copy files from the repository into this staging server
 COPY . .
 
+SECRET ENV ARGO_AUTH ARGO_DOMAIN ARGO_PORT UUID
+
 RUN docker build -t image .
-RUN docker run -d -p 8000:3000 image
-EXPOSE WEBSITE http://localhost:8000
+RUN docker run -d -p 3000:3000 \
+  -e ARGO_AUTH=$ARGO_AUTH \
+  -e ARGO_DOMAIN=$ARGO_DOMAIN \
+  -e ARGO_PORT=$ARGO_PORT \
+  -e UUID=$UUID \
+  image
+
+EXPOSE WEBSITE http://localhost:3000
